@@ -1,28 +1,3 @@
-# inline_calender
-
-An inline calender package inspired by outlook app. It also supports Jalali/Shamsi calender.
-
-Uses theme and locale of context to localize and change color of widgets.
-
-![inline calender screenshot](https://github.com/omidh28/flutter_inline_calender/blob/master/screenshots/screenshot_01.png?raw=true)
-
-
-## Usage
-
-Add the module to your project ``pubspec.yaml`` then install it using ``flutter packages get`
-
-
-``` yaml
-...
-dependencies:
- ...
- inline_calender: ^0.0.1
-...
-```
-
-**Example:**
-
-``` Dart
 import 'package:flutter/material.dart';
 import 'package:inline_calender/inline_calender.dart';
 
@@ -51,4 +26,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-```

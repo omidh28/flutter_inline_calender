@@ -1,7 +1,6 @@
-name: inline_calender
-description: A new Flutter package project.
+name: inline_calender_usage
+description: Usage example for inline_calender package.
 version: 0.0.1
-homepage: https://github.com/omidh28/flutter_inline_calender
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -9,11 +8,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  carousel_extended: ^1.0.0+1
-  intl: ^0.16.1
-  shamsi_date: ^0.8.1
-  provider: ^4.2.0
-
+  inline_calender:
+    path: ../
 
 dev_dependencies:
   flutter_test:
