@@ -1,3 +1,7 @@
+## [0.2.1]
+
+* fix a bug where picked days tiles did not take the effect.
+
 ## [0.2.0]
 
 * fix state related issues.

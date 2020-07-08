@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inline_calender/src/calender_model.dart';
+import 'package:inline_calender/src/utilities.dart';
 import 'package:provider/provider.dart';
 
 class DayTile extends StatelessWidget {
@@ -25,7 +26,7 @@ class DayTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final InlineCalenderModel model = Provider.of<InlineCalenderModel>(context);
-    bool isSelected = model.selectedDate == pickedDate;
+    bool isSelected = isSameDate(model.selectedDate, pickedDate);
     return Material(
       color: _getBackgroundColor(context,isSelected),
       child: InkWell(

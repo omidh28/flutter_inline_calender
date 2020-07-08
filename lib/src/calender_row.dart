@@ -20,15 +20,6 @@ class CalenderRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final InlineCalenderModel model = Provider.of<InlineCalenderModel>(context);
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   print('jumpig to ${model.getPageNumberOf(model.selectedDate)}');
-    //   return controller.animateToPage(
-    //     model.getPageNumberOf(model.selectedDate),
-    //     duration: Duration(seconds: 5),
-    //     curve: Curves.ease,
-    //   );
-    // });
-
     return SizedBox(
       height: MediaQuery.of(context).size.width / 7,
       width: MediaQuery.of(context).size.width,
