@@ -16,7 +16,7 @@ Add the module to your project ``pubspec.yaml`` then install it using ``flutter 
 ...
 dependencies:
  ...
- inline_calender: ^0.0.1+1
+ inline_calender: ^0.1.0
 ...
 ```
 
@@ -37,7 +37,8 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Inline Calender'),
           bottom: InlineCalender(
-            startDate: DateTime.now(),
+            pickedDate: DateTime.now(),
+            middleDate: DateTime.now(),
             onChange: (DateTime date) => print(date),
             isShamsi: false,
             height: 100,

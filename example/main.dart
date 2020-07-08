@@ -12,7 +12,8 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Inline Calender'),
           bottom: InlineCalender(
-            startDate: DateTime.now(),
+            pickedDate: DateTime.now(),
+            middleDate: DateTime.now(),
             onChange: (DateTime date) => print(date),
             isShamsi: false,
             height: 100,

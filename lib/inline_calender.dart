@@ -10,7 +10,10 @@ import 'package:provider/provider.dart';
 
 class InlineCalender extends StatefulWidget implements PreferredSizeWidget {
   /// The center of the calender
-  final DateTime startDate;
+  final DateTime middleDate;
+
+  /// picked date
+  final DateTime pickedDate;
 
   /// Set true to use shamsi/jalali date
   final bool isShamsi;
@@ -29,8 +32,9 @@ class InlineCalender extends StatefulWidget implements PreferredSizeWidget {
 
   const InlineCalender({
     Key key,
-    @required this.startDate,
+    @required this.middleDate,
     @required this.onChange,
+    @required this.pickedDate,
     this.isShamsi = false,
     this.maxWeeks = 12,
     this.coloredDateTimes = const {},
@@ -64,7 +68,7 @@ class _InlineCalenderState extends State<InlineCalender> {
 
     return ChangeNotifierProvider(
       create: (context) => InlineCalenderModel(
-        defaultSelectedDate: widget.startDate,
+        defaultSelectedDate: widget.pickedDate,
         onChange: widget.onChange,
       ),
       child: FutureBuilder(
@@ -73,12 +77,12 @@ class _InlineCalenderState extends State<InlineCalender> {
             return Column(
               children: <Widget>[
                 WeekdaysRow(
-                  middleDate: widget.startDate,
+                  middleDate: widget.middleDate,
                 ),
                 CalenderRow(
                   coloredDates: widget.coloredDateTimes.map((dateTime, color) =>
                       MapEntry(removeTimeFrom(dateTime), color)),
-                  middleDate: widget.startDate,
+                  middleDate: widget.middleDate,
                   isShamsi: widget.isShamsi,
                   maxWeeks: widget.maxWeeks,
                 ),
