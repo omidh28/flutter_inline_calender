@@ -1,3 +1,7 @@
+## [0.2.0]
+
+* fix state related issues.
+
 ## [0.1.0]
 
 * add pickedDate option.

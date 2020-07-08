@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:inline_calender/src/calender_model.dart';
+import 'package:provider/provider.dart';
 
 class DayTile extends StatelessWidget {
   final Function onTap;
 
   /// The day of the month [1..31].
   final int monthDay;
-  final bool isSelected;
   final bool isToday;
   final String title;
   final Color dotColor;
+  final DateTime pickedDate;
 
   const DayTile({
     Key key,
     @required this.onTap,
     @required this.monthDay,
-    this.isSelected = false,
+    @required this.pickedDate,
     this.isToday = false,
     this.title = '',
     this.dotColor,
@@ -22,8 +24,10 @@ class DayTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final InlineCalenderModel model = Provider.of<InlineCalenderModel>(context);
+    bool isSelected = model.selectedDate == pickedDate;
     return Material(
-      color: _getBackgroundColor(context),
+      color: _getBackgroundColor(context,isSelected),
       child: InkWell(
         enableFeedback: true,
         onTap: onTap,
@@ -37,7 +41,7 @@ class DayTile extends StatelessWidget {
                   !isSelected && title.isNotEmpty
                       ? _buildTitle(title)
                       : Container(),
-                  isSelected ? _dayLableWithChip(context) : _dayLable(context),
+                  isSelected ? _dayLableWithChip(context,isSelected) : _dayLable(context,isSelected),
                   !isSelected && dotColor != null
                       ? _buildSubDot(dotColor)
                       : Container(),
@@ -67,26 +71,26 @@ class DayTile extends StatelessWidget {
     );
   }
 
-  Text _dayLable(BuildContext context) {
+  Text _dayLable(BuildContext context, bool isSelected) {
     return Text(
       monthDay.toString(),
       style: TextStyle(
-        color: _getDayNumberColor(context),
+        color: _getDayNumberColor(context, isSelected),
         fontWeight: FontWeight.bold,
         fontSize: 14,
       ),
     );
   }
 
-  CircleAvatar _dayLableWithChip(BuildContext context) {
+  CircleAvatar _dayLableWithChip(BuildContext context, bool isSelected) {
     return CircleAvatar(
-      child: _dayLable(context),
+      child: _dayLable(context, isSelected),
       minRadius: 16,
       maxRadius: 16,
     );
   }
 
-  Color _getBackgroundColor(BuildContext context) {
+  Color _getBackgroundColor(BuildContext context, bool isSelected) {
     if (isToday && !isSelected) {
       return Theme.of(context).primaryColorLight.withOpacity(0.3);
     }
@@ -94,7 +98,7 @@ class DayTile extends StatelessWidget {
     return Colors.transparent;
   }
 
-  Color _getDayNumberColor(BuildContext context) {
+  Color _getDayNumberColor(BuildContext context, bool isSelected) {
     if (isSelected) {
       return Colors.white;
     } else if (isToday) {

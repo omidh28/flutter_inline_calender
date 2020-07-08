@@ -3,27 +3,34 @@ import 'package:inline_calender/src/calender_model.dart';
 import 'package:inline_calender/src/day_tile.dart';
 import 'package:inline_calender/src/utilities.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
-class DaysRow extends StatelessWidget {
+class DaysSlide extends StatelessWidget {
   final DateTime middleDate;
   final bool isShamsi;
   final Map<DateTime, Color> coloredDates;
+  final int pageNumber;
+  final Locale locale;
+  final InlineCalenderModel model;
+  List<DayTile> dayTiles;
 
-  const DaysRow({
+  DaysSlide({
     Key key,
     @required this.middleDate,
     @required this.isShamsi,
     @required this.coloredDates,
-  }) : super(key: key);
+    @required this.pageNumber,
+    @required this.locale,
+    @required this.model,
+  }) : super(key: key) {
+    this.dayTiles = _buildDayTiles(model, locale);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final InlineCalenderModel model = Provider.of<InlineCalenderModel>(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: _buildDayTiles(model, Localizations.localeOf(context)),
+      children: dayTiles,
     );
   }
 
@@ -43,12 +50,13 @@ class DaysRow extends StatelessWidget {
         onTap: () => model.selectedDate = date,
         monthDay: dayOfMonth,
         isToday: isSameDate(date, DateTime.now()),
-        isSelected: isSameDate(date, model.selectedDate),
+        pickedDate: date,
         title: isFirstDayOfMonth ? monthLable : '',
         dotColor: _getDotColorOf(date),
       );
 
       tiles.add(tile);
+      model.mapDateToPage(date, pageNumber);
     }
 
     return tiles;

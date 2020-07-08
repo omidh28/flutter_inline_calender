@@ -1,5 +1,7 @@
 library inline_calender;
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:inline_calender/src/calender_model.dart';
 import 'package:inline_calender/src/calender_row.dart';
@@ -9,9 +11,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
 class InlineCalender extends StatefulWidget implements PreferredSizeWidget {
-  /// The center of the calender
-  final DateTime middleDate;
-
   /// picked date
   final DateTime pickedDate;
 
@@ -30,11 +29,14 @@ class InlineCalender extends StatefulWidget implements PreferredSizeWidget {
   /// set the total height of app bar
   final double height;
 
+  /// locale used to translate month and weekdays
+  final Locale locale;
+
   const InlineCalender({
     Key key,
-    @required this.middleDate,
     @required this.onChange,
     @required this.pickedDate,
+    @required this.locale,
     this.isShamsi = false,
     this.maxWeeks = 12,
     this.coloredDateTimes = const {},
@@ -55,36 +57,41 @@ class _InlineCalenderState extends State<InlineCalender> {
 
   @override
   void initState() {
+    _dateFormatLoader = initializeDateFormatting(
+      widget.locale.toLanguageTag(),
+      null,
+    );
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_dateFormatLoader == null) {
-      final Locale locale = Localizations.localeOf(context);
-      _dateFormatLoader =
-          initializeDateFormatting(locale.toLanguageTag(), null);
-    }
-
-    return ChangeNotifierProvider(
+    return ChangeNotifierProxyProvider0(
       create: (context) => InlineCalenderModel(
         defaultSelectedDate: widget.pickedDate,
         onChange: widget.onChange,
       ),
+      update: (BuildContext contenxt, InlineCalenderModel value) {
+        if (value.selectedDate == widget.pickedDate) return value;
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          return value.selectedDate = widget.pickedDate;
+        });
+
+        return value;
+      },
       child: FutureBuilder(
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Column(
               children: <Widget>[
-                WeekdaysRow(
-                  middleDate: widget.middleDate,
-                ),
+                WeekdaysRow(middleDate: DateTime.now()),
                 CalenderRow(
-                  coloredDates: widget.coloredDateTimes.map((dateTime, color) =>
-                      MapEntry(removeTimeFrom(dateTime), color)),
-                  middleDate: widget.middleDate,
                   isShamsi: widget.isShamsi,
                   maxWeeks: widget.maxWeeks,
+                  coloredDates: widget.coloredDateTimes.map((dateTime, color) =>
+                      MapEntry(removeTimeFrom(dateTime), color)),
                 ),
               ],
             );
