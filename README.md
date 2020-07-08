@@ -4,7 +4,7 @@ An inline calender package inspired by outlook app. It also supports Jalali/Sham
 
 Uses theme and locale of context to localize and change color of widgets.
 
-![inline calender screenshot](https://github.com/omidh28/flutter_inline_calender/blob/master/screenshots/screenshot_01.png?raw=true)
+<img src="https://github.com/omidh28/flutter_inline_calender/blob/master/screenshots/screenshot_01.png?raw=true" height="500">
 
 
 ## Usage
