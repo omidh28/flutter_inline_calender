@@ -16,7 +16,7 @@ Add the module to your project ``pubspec.yaml`` then install it using ``flutter 
 ...
 dependencies:
  ...
- inline_calender: ^0.0.1
+ inline_calender: ^0.0.1+1
 ...
 ```
 
@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
             onChange: (DateTime date) => print(date),
             isShamsi: false,
             height: 100,
+            maxWeeks: 12,
             coloredDateTimes: {
               DateTime.now().add(Duration(days: 2)): Colors.blue,
               DateTime.now().subtract(Duration(days: 7)): Colors.red,
