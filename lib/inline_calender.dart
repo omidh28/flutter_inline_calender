@@ -1,7 +1,5 @@
 library inline_calender;
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:inline_calender/src/calender_model.dart';
 import 'package:inline_calender/src/calender_row.dart';
@@ -71,12 +69,15 @@ class _InlineCalenderState extends State<InlineCalender> {
       create: (context) => InlineCalenderModel(
         defaultSelectedDate: widget.pickedDate,
         onChange: widget.onChange,
+        defaultColoredDates: widget.coloredDateTimes.map(
+            (dateTime, color) => MapEntry(removeTimeFrom(dateTime), color)),
       ),
       update: (BuildContext contenxt, InlineCalenderModel value) {
-        if (value.selectedDate == widget.pickedDate) return value;
-
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          return value.selectedDate = widget.pickedDate;
+          value.coloredDates = widget.coloredDateTimes.map(
+              (dateTime, color) => MapEntry(removeTimeFrom(dateTime), color));
+
+          value.selectedDate = widget.pickedDate;
         });
 
         return value;
@@ -90,8 +91,6 @@ class _InlineCalenderState extends State<InlineCalender> {
                 CalenderRow(
                   isShamsi: widget.isShamsi,
                   maxWeeks: widget.maxWeeks,
-                  coloredDates: widget.coloredDateTimes.map((dateTime, color) =>
-                      MapEntry(removeTimeFrom(dateTime), color)),
                 ),
               ],
             );

@@ -7,15 +7,25 @@ class InlineCalenderModel extends ChangeNotifier {
 
   DateTime _selectedDate;
   Map<DateTime, int> mappedDaysToPages = {};
+  Map<DateTime, Color> _coloredDates;
   List<DaysSlide> recentDaysSlides;
 
   InlineCalenderModel({
     @required DateTime defaultSelectedDate,
     @required this.onChange,
+    @required Map<DateTime, Color> defaultColoredDates,
     Map<DateTime, int> mappedPageDay,
   }) {
     mappedDaysToPages = {};
+    _coloredDates = defaultColoredDates;
     _selectedDate = defaultSelectedDate;
+  }
+
+  get coloredDates => _coloredDates;
+
+  set coloredDates(Map<DateTime, Color> dateColors) {
+    _coloredDates = dateColors;
+    notifyListeners();
   }
 
   get selectedDate => _selectedDate;

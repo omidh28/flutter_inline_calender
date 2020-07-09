@@ -10,7 +10,6 @@ class DayTile extends StatelessWidget {
   final int monthDay;
   final bool isToday;
   final String title;
-  final Color dotColor;
   final DateTime pickedDate;
 
   const DayTile({
@@ -20,13 +19,13 @@ class DayTile extends StatelessWidget {
     @required this.pickedDate,
     this.isToday = false,
     this.title = '',
-    this.dotColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final InlineCalenderModel model = Provider.of<InlineCalenderModel>(context);
     bool isSelected = isSameDate(model.selectedDate, pickedDate);
+    Color dotColor = _getDotColorOf(model, pickedDate);
     return Material(
       color: _getBackgroundColor(context,isSelected),
       child: InkWell(
@@ -53,6 +52,13 @@ class DayTile extends StatelessWidget {
         ),
       ),
     );
+  }
+  
+  Color _getDotColorOf(InlineCalenderModel model, DateTime dateTime) {
+    print('getting color of ${dateTime.toString()}');
+    final DateTime date = removeTimeFrom(dateTime);
+    if (!model.coloredDates.containsKey(date)) return null;
+    return model.coloredDates[date];
   }
 
   Padding _buildSubDot(Color color) {

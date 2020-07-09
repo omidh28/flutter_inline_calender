@@ -8,7 +8,6 @@ import 'package:shamsi_date/shamsi_date.dart';
 class DaysSlide extends StatelessWidget {
   final DateTime middleDate;
   final bool isShamsi;
-  final Map<DateTime, Color> coloredDates;
   final int pageNumber;
   final Locale locale;
   final InlineCalenderModel model;
@@ -18,7 +17,6 @@ class DaysSlide extends StatelessWidget {
     Key key,
     @required this.middleDate,
     @required this.isShamsi,
-    @required this.coloredDates,
     @required this.pageNumber,
     @required this.locale,
     @required this.model,
@@ -52,7 +50,6 @@ class DaysSlide extends StatelessWidget {
         isToday: isSameDate(date, DateTime.now()),
         pickedDate: date,
         title: isFirstDayOfMonth ? monthLable : '',
-        dotColor: _getDotColorOf(date),
       );
 
       tiles.add(tile);
@@ -60,11 +57,5 @@ class DaysSlide extends StatelessWidget {
     }
 
     return tiles;
-  }
-
-  Color _getDotColorOf(DateTime dateTime) {
-    final DateTime date = removeTimeFrom(dateTime);
-    if (!coloredDates.containsKey(date)) return null;
-    return coloredDates[date];
   }
 }

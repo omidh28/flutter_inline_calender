@@ -1,3 +1,7 @@
+## [0.2.2]
+
+* fix state when chaning colored dates.
+
 ## [0.2.1]
 
 * fix a bug where picked days tiles did not take the effect.

@@ -7,14 +7,12 @@ import 'package:provider/provider.dart';
 class CalenderRow extends StatelessWidget {
   final bool isShamsi;
   final int maxWeeks;
-  final Map<DateTime, Color> coloredDates;
   final PageController controller = PageController();
 
   CalenderRow({
     Key key,
     @required this.isShamsi,
     @required this.maxWeeks,
-    @required this.coloredDates,
   }) : super(key: key);
 
   @override
@@ -87,7 +85,6 @@ class CalenderRow extends StatelessWidget {
           pageNumber: i,
           middleDate: startWeekMiddleDate.add(Duration(days: (i * 7))),
           isShamsi: isShamsi,
-          coloredDates: coloredDates,
           locale: locale,
           model: model,
         ),
