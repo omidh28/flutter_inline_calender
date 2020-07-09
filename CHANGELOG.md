@@ -1,3 +1,7 @@
+## [1.0.1]
+
+* fix bug where Page Controller called two times.
+
 ## [1.0.0]
 
 * revamp state management system to fix unnecessary builds.

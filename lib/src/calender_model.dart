@@ -37,10 +37,4 @@ class InlineCalenderModel extends ChangeNotifier {
     if (onChange != null) onChange(selectedDate);
     notifyListeners();
   }
-
-  @override
-  void dispose() {
-    pageController.dispose();
-    super.dispose();
-  }
 }
