@@ -10,13 +10,13 @@ class DayTile extends StatelessWidget {
   final int monthDay;
   final bool isToday;
   final String title;
-  final DateTime pickedDate;
+  final DateTime tileDate;
 
   const DayTile({
     Key key,
     @required this.onTap,
     @required this.monthDay,
-    @required this.pickedDate,
+    @required this.tileDate,
     this.isToday = false,
     this.title = '',
   }) : super(key: key);
@@ -24,10 +24,10 @@ class DayTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final InlineCalenderModel model = Provider.of<InlineCalenderModel>(context);
-    bool isSelected = isSameDate(model.selectedDate, pickedDate);
-    Color dotColor = _getDotColorOf(model, pickedDate);
+    bool isSelected = isSameDate(model.selectedDate, tileDate);
+    Color dotColor = _getDotColorOf(model.coloredDates, tileDate);
     return Material(
-      color: _getBackgroundColor(context,isSelected),
+      color: _getBackgroundColor(context, isSelected),
       child: InkWell(
         enableFeedback: true,
         onTap: onTap,
@@ -37,15 +37,7 @@ class DayTile extends StatelessWidget {
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  !isSelected && title.isNotEmpty
-                      ? _buildTitle(title)
-                      : Container(),
-                  isSelected ? _dayLableWithChip(context,isSelected) : _dayLable(context,isSelected),
-                  !isSelected && dotColor != null
-                      ? _buildSubDot(dotColor)
-                      : Container(),
-                ],
+                children: _buildTile(isSelected, context, dotColor),
               ),
             ),
           ),
@@ -53,12 +45,25 @@ class DayTile extends StatelessWidget {
       ),
     );
   }
-  
-  Color _getDotColorOf(InlineCalenderModel model, DateTime dateTime) {
-    print('getting color of ${dateTime.toString()}');
-    final DateTime date = removeTimeFrom(dateTime);
-    if (!model.coloredDates.containsKey(date)) return null;
-    return model.coloredDates[date];
+
+  List<Widget> _buildTile(
+      bool isSelected, BuildContext context, Color dotColor) {
+    return <Widget>[
+      if (!isSelected && title.isNotEmpty) _buildTitle(title) else Container(),
+      if (isSelected)
+        _dayLableWithChip(context, isSelected)
+      else
+        _dayLable(context, isSelected),
+      if (!isSelected && dotColor != null)
+        _buildSubDot(dotColor)
+      else
+        Container(),
+    ];
+  }
+
+  Color _getDotColorOf(Map<DateTime, Color> coloredDates, DateTime date) {
+    if (!coloredDates.containsKey(date)) return null;
+    return coloredDates[date];
   }
 
   Padding _buildSubDot(Color color) {

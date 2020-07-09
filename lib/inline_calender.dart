@@ -3,26 +3,18 @@ library inline_calender;
 import 'package:flutter/material.dart';
 import 'package:inline_calender/src/calender_model.dart';
 import 'package:inline_calender/src/calender_row.dart';
-import 'package:inline_calender/src/utilities.dart';
 import 'package:inline_calender/src/weekdays_row.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
-class InlineCalender extends StatefulWidget implements PreferredSizeWidget {
-  /// picked date
-  final DateTime pickedDate;
+export 'package:inline_calender/src/calender_model.dart';
 
+class InlineCalender extends StatelessWidget implements PreferredSizeWidget {
   /// Set true to use shamsi/jalali date
   final bool isShamsi;
 
   /// Number of week available from both ends of start day
   final int maxWeeks;
-
-  /// Handler when date changes
-  final Function(DateTime) onChange;
-
-  /// list of dates to add circlur color under text lable
-  final Map<DateTime, Color> coloredDateTimes;
 
   /// set the total height of app bar
   final double height;
@@ -30,75 +22,48 @@ class InlineCalender extends StatefulWidget implements PreferredSizeWidget {
   /// locale used to translate month and weekdays
   final Locale locale;
 
-  const InlineCalender({
-    Key key,
-    @required this.onChange,
-    @required this.pickedDate,
+  /// controller if you want to change selected date programitcaly
+  final InlineCalenderModel controller;
+
+  /// week day of the center of calender slide, default is today's weekdad. [1..7]
+  final int middleWeekday;
+
+  final Future<void> dateFormatLoader;
+
+  InlineCalender({
     @required this.locale,
+    @required this.controller,
+    @required this.middleWeekday,
     this.isShamsi = false,
     this.maxWeeks = 12,
-    this.coloredDateTimes = const {},
     this.height = 100,
-  }) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _InlineCalenderState();
+  }) : dateFormatLoader =
+            initializeDateFormatting(locale.toLanguageTag(), null) {
+    if (maxWeeks % 2 != 0) {
+      throw ArgumentError.value(maxWeeks);
+    }
   }
 
   @override
   Size get preferredSize => Size(100, this.height);
-}
-
-class _InlineCalenderState extends State<InlineCalender> {
-  Future<void> _dateFormatLoader;
-
-  @override
-  void initState() {
-    _dateFormatLoader = initializeDateFormatting(
-      widget.locale.toLanguageTag(),
-      null,
-    );
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProxyProvider0(
-      create: (context) => InlineCalenderModel(
-        defaultSelectedDate: widget.pickedDate,
-        onChange: widget.onChange,
-        defaultColoredDates: widget.coloredDateTimes.map(
-            (dateTime, color) => MapEntry(removeTimeFrom(dateTime), color)),
-      ),
-      update: (BuildContext contenxt, InlineCalenderModel value) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          value.coloredDates = widget.coloredDateTimes.map(
-              (dateTime, color) => MapEntry(removeTimeFrom(dateTime), color));
-
-          value.selectedDate = widget.pickedDate;
-        });
-
-        return value;
-      },
-      child: FutureBuilder(
-        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Column(
-              children: <Widget>[
-                WeekdaysRow(middleDate: DateTime.now()),
-                CalenderRow(
-                  isShamsi: widget.isShamsi,
-                  maxWeeks: widget.maxWeeks,
-                ),
-              ],
-            );
-          } else {
-            return Container();
-          }
-        },
-        future: _dateFormatLoader,
+    return ChangeNotifierProvider.value(
+      value: this.controller,
+      child: Column(
+        children: <Widget>[
+          WeekdaysRow(
+            middleWeekday: middleWeekday,
+            locale: locale,
+          ),
+          CalenderRow(
+            locale: locale,
+            isShamsi: isShamsi,
+            maxWeeks: maxWeeks,
+            middleWeekday: middleWeekday,
+          ),
+        ],
       ),
     );
   }

@@ -2,88 +2,88 @@ import 'package:carousel_extended/carousel_extended.dart';
 import 'package:flutter/material.dart';
 import 'package:inline_calender/src/calender_model.dart';
 import 'package:inline_calender/src/days_slide.dart';
+import 'package:inline_calender/src/utilities.dart';
 import 'package:provider/provider.dart';
 
 class CalenderRow extends StatelessWidget {
   final bool isShamsi;
   final int maxWeeks;
-  final PageController controller = PageController();
+  final Locale locale;
+  final int middleWeekday;
 
   CalenderRow({
     Key key,
     @required this.isShamsi,
     @required this.maxWeeks,
+    @required this.locale,
+    @required this.middleWeekday,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final InlineCalenderModel model = Provider.of<InlineCalenderModel>(context);
+    DateTime baseDate;
+    if (model.lastBuildBaseDate != null) {
+      final int pageNumber = _getPageNumber(
+        dateTime: model.selectedDate,
+        slidesBaseDate: model.lastBuildBaseDate,
+      );
+
+      if (pageNumber == null) {
+        baseDate = model.selectedDate;
+        _jumpTo(maxWeeks, model.pageController);
+      } else {
+        baseDate = model.lastBuildBaseDate;
+        _animateTo(pageNumber, model.pageController);
+      }
+    } else {
+      baseDate = model.selectedDate;
+      _jumpTo(maxWeeks, model.pageController);
+    }
+
+    final baseDateUtc =
+        DateTime.utc(baseDate.year, baseDate.month, baseDate.day);
+    final List<DaysSlide> slides = _buildDaysSlides(
+      locale: locale,
+      midWeekday: middleWeekday,
+      model: model,
+      baseDate: baseDateUtc,
+    );
+
     return SizedBox(
       height: MediaQuery.of(context).size.width / 7,
       width: MediaQuery.of(context).size.width,
       child: Container(
         color: Colors.white,
         child: Carousel(
-          pageController: controller,
+          pageController: model.pageController,
           showIndicator: false,
           autoplay: false,
-          images: model.getPageNumberOf(model.selectedDate) == null
-              ? _rebuildDaysSlides(model, context)
-              : _returnRecentSlides(model),
+          images: slides,
         ),
       ),
     );
   }
 
-  List<DaysSlide> _returnRecentSlides(InlineCalenderModel model) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (model.getPageNumberOf(model.selectedDate) == null) return model.recentDaysSlides;
-      return controller.animateToPage(
-        model.getPageNumberOf(model.selectedDate),
-        duration: Duration(seconds: 2),
-        curve: Curves.ease,
-      );
-    });
-
-    return model.recentDaysSlides;
-  }
-
-  List<DaysSlide> _rebuildDaysSlides(
-    InlineCalenderModel model,
-    BuildContext context,
-  ) {
-    List<DaysSlide> slides = _buildDaysSlides(
-      DateTime.now().weekday,
-      model,
-      Localizations.localeOf(context),
-    );
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.jumpToPage(maxWeeks);
-    });
-
-    return slides;
-  }
-
-  List<DaysSlide> _buildDaysSlides(
-    int midWeekday,
-    InlineCalenderModel model,
-    Locale locale,
-  ) {
-    model.clearDateToPageMap();
+  List<DaysSlide> _buildDaysSlides({
+    @required int midWeekday,
+    @required InlineCalenderModel model,
+    @required Locale locale,
+    @required DateTime baseDate,
+  }) {
     List<DaysSlide> slides = [];
-    final middleDate = model.selectedDate.add(
-      Duration(days: midWeekday - model.selectedDate.weekday),
+    final DateTime middleDate = baseDate.add(
+      Duration(days: midWeekday - baseDate.weekday),
     );
 
-    final DateTime startWeekMiddleDate =
+    final DateTime firstSlideMiddleDate =
         middleDate.subtract(Duration(days: (7 * maxWeeks)));
 
     for (int i = 0; i < maxWeeks * 2; i++) {
       slides.add(
         DaysSlide(
           pageNumber: i,
-          middleDate: startWeekMiddleDate.add(Duration(days: (i * 7))),
+          middleDate: firstSlideMiddleDate.add(Duration(days: (i * 7))),
           isShamsi: isShamsi,
           locale: locale,
           model: model,
@@ -91,7 +91,42 @@ class CalenderRow extends StatelessWidget {
       );
     }
 
-    model.recentDaysSlides = slides;
+    model.lastBuildBaseDate = baseDate;
     return slides;
+  }
+
+  int _getPageNumber({
+    @required DateTime dateTime,
+    @required DateTime slidesBaseDate,
+  }) {
+    final int totalPages = maxWeeks * 2;
+    final DateTime date = removeTimeFrom(dateTime);
+    final DateTime middleDate = slidesBaseDate.add(
+      Duration(days: middleWeekday - slidesBaseDate.weekday),
+    );
+
+    final DateTime firstDateOfMiddleWeek =
+        removeTimeFrom(middleDate.subtract(Duration(days: 3)));
+
+    final int pageNumber =
+        (date.difference(firstDateOfMiddleWeek).inDays / 7).floor() + maxWeeks;
+
+    return (pageNumber < 0 || pageNumber > totalPages - 1) ? null : pageNumber;
+  }
+
+  _jumpTo(int page, PageController pageController) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => pageController.jumpToPage(page),
+    );
+  }
+
+  _animateTo(int page, PageController pageController) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => pageController.animateToPage(
+        page,
+        curve: Curves.ease,
+        duration: Duration(seconds: 1),
+      ),
+    );
   }
 }

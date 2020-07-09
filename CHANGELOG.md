@@ -1,3 +1,9 @@
+## [1.0.0]
+
+* revamp state management system to fix unnecessary builds.
+* fix arabic translation of week names
+* stable release
+
 ## [0.2.2]
 
 * fix state when chaning colored dates.
