@@ -1,5 +1,5 @@
 name: inline_calender
-description: A new Flutter package project.
+description: An inline calender package inspired by outlook app with Jalali/Shamsi calender support.
 version: 1.0.1
 homepage: https://github.com/omidh28/flutter_inline_calender
 
