@@ -1,6 +1,6 @@
 name: inline_calender
 description: An inline calender package inspired by outlook app with Jalali/Shamsi calender support.
-version: 1.0.1
+version: 1.0.1+1
 homepage: https://github.com/omidh28/flutter_inline_calender
 
 environment:

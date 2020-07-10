@@ -1,3 +1,7 @@
+## [1.0.1+1]
+
+* add description to pubspect.yaml.
+
 ## [1.0.1]
 
 * fix bug where Page Controller called two times.
