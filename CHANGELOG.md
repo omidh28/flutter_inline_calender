@@ -1,3 +1,7 @@
+## [1.2.0]
+
+* update carousel package.
+
 ## [1.1.0]
 
 * fix dispose bug.
