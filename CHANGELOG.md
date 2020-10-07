@@ -1,3 +1,7 @@
+## [1.1.0]
+
+* fix dispose bug.
+
 ## [1.0.1+1]
 
 * add description to pubspect.yaml.
