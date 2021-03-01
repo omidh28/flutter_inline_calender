@@ -1,6 +1,6 @@
-## [1.2.0]
+## [1.2.0+1]
 
-* update carousel package.
+* Fix calendar typo. Can't do much about package name.
 
 ## [1.1.0]
 
