@@ -1,3 +1,7 @@
+## [2.0.0]
+
+* Allow changing colored dates without notification
+
 ## [1.2.0+1]
 
 * Fix calendar typo. Can't do much about package name.

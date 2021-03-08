@@ -19,14 +19,15 @@ class InlineCalenderModel extends ChangeNotifier {
 
   Map<DateTime, Color> get coloredDates => _coloredDates;
 
-  set coloredDates(Map<DateTime, Color> newColoredDateTimes) {
+  void setColoredDates(Map<DateTime, Color> newColoredDateTimes,
+      {bool skipNotification = false}) {
     final Map<DateTime, Color> newColoredDates = newColoredDateTimes.map(
       (DateTime dateTime, Color color) =>
           MapEntry(removeTimeFrom(dateTime), color),
     );
 
     _coloredDates = newColoredDates;
-    notifyListeners();
+    if (!skipNotification) notifyListeners();
   }
 
   DateTime get selectedDate => _selectedDate;

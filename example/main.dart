@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
       defaultSelectedDate: _pickedDate,
       onChange: (DateTime date) => print(date),
     );
-    _controller.coloredDates = _coloredDates;
+    _controller.setColoredDates(_coloredDates);
     super.initState();
   }
 
