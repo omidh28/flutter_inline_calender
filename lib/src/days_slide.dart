@@ -32,7 +32,7 @@ class DaysSlide extends StatelessWidget {
   List<DayTile> _buildDayTiles(InlineCalenderModel model, Locale locale) {
     List<DayTile> tiles = [];
     for (int i = 0; i < 7; i++) {
-      final DateTime dateTime = middleDate.add(Duration(days: i - 3));
+      final DateTime dateTime = safeAdd(middleDate, Duration(days: i - 3));
       final Jalali shamsiDate = Jalali.fromDateTime(dateTime);
       final String gregorianMonthLable =
           DateFormat.MMM(locale.toLanguageTag()).format(dateTime);

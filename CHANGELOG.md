@@ -1,3 +1,7 @@
+## [2.1.0]
+
+* Fix DST offset bug 
+
 ## [2.0.0]
 
 * Allow changing colored dates without notification

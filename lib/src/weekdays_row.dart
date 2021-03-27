@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inline_calender/src/utilities.dart';
 import 'package:inline_calender/src/weekday_tile.dart';
 import 'package:intl/intl.dart';
 
@@ -28,12 +29,12 @@ class WeekdaysRow extends StatelessWidget {
     List<Widget> tiles = [];
     DateTime middleDate = DateTime.now();
     while (middleDate.weekday != middleWeekday) {
-      middleDate = middleDate.add(Duration(days: 1));
+      middleDate = safeAdd(middleDate, Duration(days: 1));
     }
 
     for (int i = 0; i < 7; i++) {
       final String abbrWeekName = DateFormat.E(locale.toLanguageTag()).format(
-        middleDate.add(Duration(days: i - 3)),
+        safeAdd(middleDate, Duration(days: i - 3)),
       );
 
       tiles.add(WeekdayTile(

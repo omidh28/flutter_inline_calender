@@ -72,18 +72,19 @@ class CalenderRow extends StatelessWidget {
     @required DateTime baseDate,
   }) {
     List<DaysSlide> slides = [];
-    final DateTime middleDate = baseDate.add(
+    final DateTime middleDate = safeAdd(
+      baseDate,
       Duration(days: midWeekday - baseDate.weekday),
     );
 
     final DateTime firstSlideMiddleDate =
-        middleDate.subtract(Duration(days: (7 * maxWeeks)));
+        safeSubtract(middleDate, Duration(days: (7 * maxWeeks)));
 
     for (int i = 0; i < maxWeeks * 2; i++) {
       slides.add(
         DaysSlide(
           pageNumber: i,
-          middleDate: firstSlideMiddleDate.add(Duration(days: (i * 7))),
+          middleDate: safeAdd(firstSlideMiddleDate, Duration(days: (i * 7))),
           isShamsi: isShamsi,
           locale: locale,
           model: model,
@@ -99,17 +100,25 @@ class CalenderRow extends StatelessWidget {
     @required DateTime dateTime,
     @required DateTime slidesBaseDate,
   }) {
+    final DateTime utcDateTime =
+        DateTime.utc(dateTime.year, dateTime.month, dateTime.day);
     final int totalPages = maxWeeks * 2;
-    final DateTime date = removeTimeFrom(dateTime);
-    final DateTime middleDate = slidesBaseDate.add(
+    final DateTime date = removeTimeFrom(utcDateTime);
+    final DateTime middleDate = safeAdd(
+      slidesBaseDate,
       Duration(days: middleWeekday - slidesBaseDate.weekday),
     );
 
     final DateTime firstDateOfMiddleWeek =
-        removeTimeFrom(middleDate.subtract(Duration(days: 3)));
+        safeSubtract(middleDate, Duration(days: 3));
+    final DateTime firstDateOfMiddleWeekWithoutTime = DateTime.utc(
+        firstDateOfMiddleWeek.year,
+        firstDateOfMiddleWeek.month,
+        firstDateOfMiddleWeek.day);
 
     final int pageNumber =
-        (date.difference(firstDateOfMiddleWeek).inDays / 7).floor() + maxWeeks;
+        (utcDateTime.difference(firstDateOfMiddleWeekWithoutTime).inDays / 7).floor() +
+            maxWeeks;
 
     return (pageNumber < 0 || pageNumber > totalPages - 1) ? null : pageNumber;
   }
